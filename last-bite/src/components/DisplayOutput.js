@@ -1,8 +1,9 @@
 import anime from "animejs";
 import React, { useEffect, useRef } from "react";
 
-const DisplayOutput = ({ inputValue, handleTryAgain, scrollToIngredients }) => {
+const DisplayOutput = ({ inputValue, handleTryAgain, scrollToIngredients, predictedYear }) => {
   const containerRef = useRef(null);
+  const currentYear = new Date().getFullYear()
 
   useEffect(() => {
     anime({
@@ -41,8 +42,7 @@ const DisplayOutput = ({ inputValue, handleTryAgain, scrollToIngredients }) => {
             textAlign: "center",
           }}
         >
-          {inputValue.charAt(0).toUpperCase() + inputValue.slice(1)} will expire
-          in ___ years !!
+          {inputValue.charAt(0).toUpperCase() + inputValue.slice(1)} will go extinct in {predictedYear - currentYear} years !!
         </p>
         <div>
           <button

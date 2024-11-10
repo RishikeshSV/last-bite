@@ -6,15 +6,15 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from tensorflow.keras.models import load_model
 
 # Load the pre-trained models
-nn_model_temp_rainfall = load_model('./Models/temp_rainfall_model.h5')
-nn_model_year = load_model('./Models/year_model.h5')
+nn_model_temp_rainfall = load_model('./models/temp_rainfall_model.h5')
+nn_model_year = load_model('./models/year_model.h5')
 
 # Load the scaler and encoder, assuming they were fit during the training
 scaler = StandardScaler()
 encoder = OneHotEncoder()
 
 # Load the dataset for consistent preprocessing (adapt as needed)
-yield_df = pd.read_csv('./Models/yield_df.csv')
+yield_df = pd.read_csv('./models/updated_yield_df.csv')
 yield_df['hg/ha_yield'].fillna(yield_df['hg/ha_yield'].mean(), inplace=True)
 yield_df['avg_temp'].fillna(yield_df['avg_temp'].mean(), inplace=True)
 yield_df['average_rain_fall_mm_per_year'].fillna(yield_df['average_rain_fall_mm_per_year'].mean(), inplace=True)

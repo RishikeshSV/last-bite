@@ -17,15 +17,15 @@ const Home = React.forwardRef((props, ref) => {
 
   const handleEnterPress = () => {
     setShowOutputPage(true);
-    fetchIngredients();
+    getPrediction();
   };
 
   const handleTryAgain = () => {
     setShowOutputPage(false);
   };
-  const [ingredients, setIngredients] = useState(null);
+  const [predictedYear, setPredictedYear] = useState(null);
 
-  const fetchIngredients = async () => {
+  const getPrediction = async () => {
     try {
       const response = await fetch('http://127.0.0.1:5000/predict', {
         method: 'POST',
@@ -35,9 +35,9 @@ const Home = React.forwardRef((props, ref) => {
         body: `dish_name=${inputValue}`, // Send the dish name in the request body
       });
 
-      const data = await response.text();
-      setIngredients(data); // Assuming the response is JSON
-      console.log("inge >>", ingredients);
+      const data = await response.json();
+      console.log("data >>>", data);
+      setPredictedYear(data.predicted_year)
       
     } catch (error) {
       console.error('Error fetching ingredients:', error);
@@ -50,11 +50,11 @@ const Home = React.forwardRef((props, ref) => {
       <div>
         {showOutputPage ? (
           <div>
-            {ingredients}
             <DisplayOutput
               inputValue={inputValue}
               handleTryAgain={handleTryAgain}
               scrollToIngredients={scrollToIngredients}
+              predictedYear={predictedYear}
             />
           </div>
         ) : (
