@@ -9,7 +9,7 @@ const Ingredients = React.forwardRef((props, ref) => {
   const [noOfIngredients, setNoOfIngredients] = useState(0);
   const [alternateIngredient, setAlternateIngredients] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  const { data } = props;
+  const { data, scrollToFunFacts } = props;
 
   const PrettyText = styled.div`
     font-size: 1.5em;
@@ -168,7 +168,7 @@ const Ingredients = React.forwardRef((props, ref) => {
               </div>
             </div>
             <div
-              onClick={() => {}} // Trigger the scroll on click
+              onClick={scrollToFunFacts} // Trigger the scroll on click
               style={{
                 position: "absolute",
                 bottom: "20px", // Position the arrow at the bottom

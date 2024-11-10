@@ -43,7 +43,7 @@ def find_list_ingredients(dish_name):
 
     Dish: {dish_name}
 
-    Return only the list of ingredients without any additional text and within one or two words"""
+    Return only the list of ingredients without any additional text and within one word"""
 
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",  # Use "gpt-4" if available and you have access
@@ -75,6 +75,23 @@ def find_replacement_ingredient(dish, ingredient):
 
     replacement_ingredient = response['choices'][0]['message']['content'].strip()
     return replacement_ingredient
+
+def get_fun_fact(ingredient):
+    """
+    Uses OpenAI to retrieve a fun fact about a given ingredient.
+    """
+    prompt = f"Provide a funny fact about the ingredient: {ingredient}. Limit it to one sentence"
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a knowledgeable assistant for providing fun facts."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    fun_fact = response['choices'][0]['message']['content'].strip()
+    return fun_fact
 
 @app.route('/list-ingredients', methods=['POST'])
 def list_ingredients():
@@ -173,6 +190,25 @@ def generate_image():
     print(response.text)
     
     return response
+
+@app.route('/get-fun-fact', methods=['POST'])
+def get_fun_fact_endpoint():
+    dish_name = request.form.get('dish_name', '').strip()
+
+    if not dish_name:
+        return jsonify({"error": "Dish name is required."}), 400
+    
+    answerJson = {}
+
+    try:
+        ingredientsList = [ingredient.strip() for ingredient in find_list_ingredients(dish_name).split(',')]
+        print(ingredientsList)
+        for ingredient in ingredientsList:
+            fun_fact = get_fun_fact(ingredient)
+            answerJson[ingredient] = fun_fact
+        return jsonify(answerJson)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
