@@ -63,7 +63,7 @@ def find_replacement_ingredient(dish, ingredient):
     Dish: {dish}
     Ingredient: {ingredient}
 
-    Return only the replacement ingredientthat can be used without any additional text and within one or two words"""
+    Return only the replacement ingredient that can be used without any additional text and within one or two words"""
 
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",  # Use "gpt-4" if available and you have access
