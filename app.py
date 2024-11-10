@@ -13,8 +13,8 @@ openai.api_key = 'sk-svcacct-cNpEjHaToqE8f1_oq5mtOav-MW58kAAPPnY2lzO3W3FdX1lTM4-
 
 # Predefined available ingredients
 available_ingredients = [
-    "maize", "potatoes", "rice", "paddy", "sorghum",
-    "soybeans", "wheat", "cassava", "sweet potatoes", "plantains", "yams"
+    "Maize", "Potatoes", "Rice", "Sorghum",
+    "Soybeans", "Wheat", "Cassava", "Sweet potatoes", "Plantains", "Yams"
 ]
 
 def find_ingredient(dish_name):
@@ -34,8 +34,9 @@ def find_ingredient(dish_name):
             {"role": "user", "content": prompt}
         ]
     )
-
+    print("response >>>", response)
     main_ingredient = response['choices'][0]['message']['content'].strip()
+    print("main >>", main_ingredient)
     return main_ingredient
 
 def find_list_ingredients(dish_name):
@@ -85,14 +86,16 @@ def predict():
 
     try:
         main_ingredient = find_ingredient(dish_name)
+        print("We got the main ingredient >>>", main_ingredient)
         crop = main_ingredient
         yield_value = 0
 
         predicted_year, predicted_temp, predicted_rainfall = predict_year_temperature_humidity_nn(crop, yield_value)
+        print(predicted_year, predicted_temp, predicted_rainfall)
         return jsonify({
-            "predicted_year": int(predicted_year),
-            "predicted_temperature": round(predicted_temp, 2),
-            "predicted_rainfall": round(predicted_rainfall, 2)
+            "predicted_year": int(predicted_year.astype(float)),
+            "predicted_temperature": round(predicted_temp.astype(float), 2),
+            "predicted_rainfall": round(predicted_rainfall.astype(float), 2)
         })
     except Exception as e:
         return f"Error: {str(e)}", 500
