@@ -3,7 +3,7 @@ import LastBiteForText from '../images/page2.jpg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
-const Background = ({scrollToLanding}) => {
+const Background = ({scrollToLanding, showOutputPage, scrollToIngredients}) => {
   return (
     <>
 
@@ -35,8 +35,8 @@ const Background = ({scrollToLanding}) => {
       >
         <FontAwesomeIcon icon={faArrowUp} />
       </div>
-      <div
-        onClick={scrollToLanding} // Trigger the scroll on click
+      {showOutputPage ? ( <div
+        onClick={scrollToIngredients} // Trigger the scroll on click
         style={{
           position: 'absolute',
           bottom: '20px', // Position the arrow at the bottom
@@ -51,7 +51,8 @@ const Background = ({scrollToLanding}) => {
         }}
       >
         <FontAwesomeIcon icon={faArrowDown} />
-      </div>
+      </div>) : (<></>)}
+     
     </div>
     </>
   );

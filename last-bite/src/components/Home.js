@@ -8,7 +8,8 @@ import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 const Home = React.forwardRef((props, ref) => {
   const [inputValue, setInputValue] = useState("");
   const [showOutputPage, setShowOutputPage] = useState(false);
-  const { scrollToLanding } = props;
+  const { scrollToLanding, scrollToIngredients } = props;
+
 
   const handleInputChange = (value) => {
     setInputValue(value);
@@ -26,7 +27,7 @@ const Home = React.forwardRef((props, ref) => {
 
   const fetchIngredients = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/get_ingredient', {
+      const response = await fetch('http://127.0.0.1:5000/predict', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded', // Specify the content type
@@ -44,8 +45,8 @@ const Home = React.forwardRef((props, ref) => {
   };
 
   return (
-    <div ref={ref}>
-      <Background scrollToLanding={scrollToLanding} />
+    <div ref={ref} style={{position: 'relative'}}>
+      <Background scrollToLanding={scrollToLanding} showOutputPage={showOutputPage} scrollToIngredients={scrollToIngredients}/>
       <div>
         {showOutputPage ? (
           <div>
@@ -53,6 +54,7 @@ const Home = React.forwardRef((props, ref) => {
             <DisplayOutput
               inputValue={inputValue}
               handleTryAgain={handleTryAgain}
+              scrollToIngredients={scrollToIngredients}
             />
           </div>
         ) : (

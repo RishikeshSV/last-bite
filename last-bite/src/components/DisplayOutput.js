@@ -1,7 +1,7 @@
 import anime from "animejs";
 import React, { useEffect, useRef } from "react";
 
-const DisplayOutput = ({ inputValue, handleTryAgain }) => {
+const DisplayOutput = ({ inputValue, handleTryAgain, scrollToIngredients }) => {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const DisplayOutput = ({ inputValue, handleTryAgain }) => {
         ref={containerRef}
         style={{
           position: "absolute",
-          top: "150%",
+          top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: "50%",
@@ -46,7 +46,7 @@ const DisplayOutput = ({ inputValue, handleTryAgain }) => {
         </p>
         <div>
           <button
-            onClick={handleTryAgain}
+            onClick={scrollToIngredients}
             style={{
               cursor: "pointer",
               marginTop: "20px",
@@ -57,14 +57,17 @@ const DisplayOutput = ({ inputValue, handleTryAgain }) => {
               fontSize: "20px",
             }}
           >
-            Scroll down for more
+            Wanna know why ?
           </button>
-          <div>OR</div>
+          <div style={{
+            textAlign: "center",
+            marginTop: '15px',
+            marginBottom: '15px'
+          }}>OR</div>
           <button
             onClick={handleTryAgain}
             style={{
               cursor: "pointer",
-              marginTop: "20px",
               padding: "10px",
               backgroundColor: "#FDE5CD",
               borderRadius: "4px",

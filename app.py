@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import openai
 from flask_cors import CORS
+from predict import predict_year_temperature_humidity_nn  
 
 app = Flask(__name__)
 CORS(app) 
@@ -33,22 +34,6 @@ def find_ingredient(dish_name):
 
     main_ingredient = response['choices'][0]['message']['content'].strip()
     return main_ingredient
-
-@app.route('/get_ingredient', methods=['POST'])
-def get_ingredient():
-    # Accept dish name via form data
-    dish_name = request.form.get('dish_name', '').strip()
-
-    # Input validation
-    if not dish_name:
-        return "Error: Dish name is required.", 400
-
-    try:
-        main_ingredient = find_ingredient(dish_name)
-        return main_ingredient
-    except Exception as e:
-        return f"Error: {str(e)}", 500
-    
 
 def find_list_ingredients(dish_name):
     prompt = f"""
@@ -87,6 +72,27 @@ def list_ingredients():
         return jsonify({"ingredients": ingredients_list})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    dish_name = request.form.get('dish_name', '').strip()
+
+    if not dish_name:
+        return "Error: Dish name is required.", 400
+
+    try:
+        main_ingredient = find_ingredient(dish_name)
+        crop = main_ingredient
+        yield_value = 0
+
+        predicted_year, predicted_temp, predicted_rainfall = predict_year_temperature_humidity_nn(crop, yield_value)
+        return jsonify({
+            "predicted_year": int(predicted_year),
+            "predicted_temperature": round(predicted_temp, 2),
+            "predicted_rainfall": round(predicted_rainfall, 2)
+        })
+    except Exception as e:
+        return f"Error: {str(e)}", 500
 
 if __name__ == '__main__':
     app.run(debug=True)

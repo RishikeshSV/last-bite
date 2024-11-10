@@ -25,7 +25,7 @@ const SlidingInput = ({ handleInputChange, handleEnterPress }) => {
       ref={containerRef}
       style={{
         position: 'absolute',
-        top: '150%',
+        top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: '50%',
