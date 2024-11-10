@@ -139,6 +139,22 @@ def generate_image():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/get-fun-fact', methods=['POST'])
+def get_fun_fact_endpoint():
+    dish_name = request.form.get('dish_name', '').strip()
+
+    if not dish_name:
+        return jsonify({"error": "Dish name is required."}), 400
+
+    try:
+        main_ingredient = find_ingredient(dish_name)
+        fun_fact = get_fun_fact(main_ingredient)
+        return jsonify({
+            "main_ingredient": main_ingredient,
+            "fun_fact": fun_fact
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
