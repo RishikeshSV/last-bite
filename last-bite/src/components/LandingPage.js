@@ -1,7 +1,5 @@
 import React from 'react';
-import FoodBg from '../images/FoodIcons.jpg'; // Import the image
 import LastBite from '../images/lastBite.jpg' // Import the image to display
-import Home from './Home';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
