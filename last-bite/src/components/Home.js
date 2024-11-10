@@ -8,8 +8,7 @@ import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 const Home = React.forwardRef((props, ref) => {
   const [inputValue, setInputValue] = useState("");
   const [showOutputPage, setShowOutputPage] = useState(false);
-  const { scrollToLanding, scrollToIngredients } = props;
-
+  const { scrollToLanding, scrollToIngredients, setData } = props;
 
   const handleInputChange = (value) => {
     setInputValue(value);
@@ -27,26 +26,29 @@ const Home = React.forwardRef((props, ref) => {
 
   const getPrediction = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/predict', {
-        method: 'POST',
+      const response = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded', // Specify the content type
+          "Content-Type": "application/x-www-form-urlencoded", // Specify the content type
         },
         body: `dish_name=${inputValue}`, // Send the dish name in the request body
       });
 
       const data = await response.json();
-      console.log("data >>>", data);
-      setPredictedYear(data.predicted_year)
-      
+      setPredictedYear(data.predicted_year);
+      setData(data);
     } catch (error) {
-      console.error('Error fetching ingredients:', error);
+      console.error("Error fetching ingredients:", error);
     }
   };
 
   return (
-    <div ref={ref} style={{position: 'relative'}}>
-      <Background scrollToLanding={scrollToLanding} showOutputPage={showOutputPage} scrollToIngredients={scrollToIngredients}/>
+    <div ref={ref} style={{ position: "relative" }}>
+      <Background
+        scrollToLanding={scrollToLanding}
+        showOutputPage={showOutputPage}
+        scrollToIngredients={scrollToIngredients}
+      />
       <div>
         {showOutputPage ? (
           <div>

@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from "react";
-import IngredientsBackground from "./IngredientsBackground";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import Why from "../images/why.jpg";
+import PexelsImageFetcher from "./ImageGenerator";
+import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 const Ingredients = React.forwardRef((props, ref) => {
-    const [image, setImage] = useState(null)
-  const getImage = async (prompt) => {
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "<content-type>",
-        "x-freepik-api-key": "FPSXcb802234c5cf4c1a85a680749d117169",
-      },
-      body: `{"prompt": ${prompt},"negative_prompt":"b&w, earth, cartoon, ugly","guidance_scale":2,"seed":42,"num_images":1,"image":{"size":"square_1_1"},"styling":{"style":"anime","color":"pastel","lightning":"warm","framing":"portrait"}}`,
-    };
+  const [noOfIngredients, setNoOfIngredients] = useState(0);
+  const [imageUrl, setImageUrl] = useState(null);
+  const { data } = props;
 
-    fetch("https://api.freepik.com/v1/ai/text-to-image", options)
-      .then((response) => {setImage(response.json()); console.log(image)})
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));
-  };
+  const PrettyText = styled.div`
+  font-size: 1.5em;
+  color: #4a4e69;
+  font-weight: 600;
+  text-align: center;
+  margin: 20px;
+  line-height: 1.5;
+  font-family: 'Arial', sans-serif;
+  background-color: #f2e9e4;
+  padding: 5px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+`;
 
   const getIngredients = async (inputValue) => {
     try {
@@ -39,15 +43,103 @@ const Ingredients = React.forwardRef((props, ref) => {
   };
 
   useEffect(() => {
-    getIngredients('ramen');
-    getImage('tomato')
-  })
+    if (data) {
+      getIngredients(data.dish);
+    }
+  });
 
   return (
     <div ref={ref}>
-      <IngredientsBackground />
-      Ingredients
-      <FontAwesomeIcon icon={["fas", "coffee"]} />
+      {data ? (
+        <>
+          <div
+            style={{
+              backgroundImage: `url(${Why})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              height: "100vh",
+              width: "100%",
+              position: "relative", // This ensures the arrow is positioned at the bottom
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                marginRight: "20px",
+                fontSize: "34px",
+                textAlign: "center",
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingTop: '10%'
+              }}
+            >
+              <div>The main ingredient is</div> <PrettyText>{data.main_ingredient}</PrettyText>
+            </div>
+              <div style={{display: 'flex', justifyContent: 'center'}}>
+              <PexelsImageFetcher keyword={data.main_ingredient} />
+              </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                paddingTop: '2%',
+                justifyContent: 'center',
+                fontSize: '30px '
+              }}
+            >
+              It doesn't survive when
+              <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                marginRight: "20px",
+                fontSize: "24px",
+                textAlign: "center",
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+<div style={{paddingTop: '20px', paddingBottom: '20px'}}>Temperature is </div> <PrettyText>{data.predicted_temperature} C</PrettyText>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                marginRight: "20px",
+                fontSize: "24px",
+                textAlign: "center",
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <div>Rainfall is </div> <PrettyText>{data.predicted_rainfall} mm/yr</PrettyText>
+              </div>
+            </div>
+            <div
+        onClick={() => {}} // Trigger the scroll on click
+        style={{
+          position: 'absolute',
+          bottom: '20px', // Position the arrow at the bottom
+          left:'50%',
+          transform: 'translateX(-50%)',
+          cursor: 'pointer',
+          fontSize: '30px',
+          color: '#fff', // Change arrow color if needed
+          backgroundColor: '#7d5241',
+          borderRadius: '50%',
+          padding: '10px 15px'
+        }}
+      >
+        <FontAwesomeIcon icon={faArrowDown} />
+      </div>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 });

@@ -4,7 +4,7 @@ import Home from './components/Home';
 // import BackgroundWithFoodImages from './components/Background';
 import Background from './components/Background';
 import LandingPage from './components/LandingPage';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import Ingredients from './components/Ingredients';
 
 function App() {
@@ -31,11 +31,12 @@ function App() {
     }
   }
 
+  const [data, setData] = useState(null)
   return (
     <>
     <LandingPage scrollToHome={scrollToHome} ref={landingRef}/>
-    <Home ref={homeRef} scrollToLanding={scrollToLanding} scrollToIngredients={scrollToIngredients}/>
-    <Ingredients ref={ingredientsRef} scrollToIngredients={scrollToIngredients}/>
+    <Home ref={homeRef} scrollToLanding={scrollToLanding} scrollToIngredients={scrollToIngredients} setData={setData}/>
+    <Ingredients ref={ingredientsRef} scrollToIngredients={scrollToIngredients} data={data}/>
     </>
   );
 }
