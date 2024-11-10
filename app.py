@@ -34,9 +34,7 @@ def find_ingredient(dish_name):
             {"role": "user", "content": prompt}
         ]
     )
-    print("response >>>", response)
     main_ingredient = response['choices'][0]['message']['content'].strip()
-    print("main >>", main_ingredient)
     return main_ingredient
 
 def find_list_ingredients(dish_name):
@@ -126,13 +124,14 @@ def predict():
 
     try:
         main_ingredient = find_ingredient(dish_name)
-        print("We got the main ingredient >>>", main_ingredient)
         crop = main_ingredient
         yield_value = 0
 
         predicted_year, predicted_temp, predicted_rainfall = predict_year_temperature_humidity_nn(crop, yield_value)
         print(predicted_year, predicted_temp, predicted_rainfall)
         return jsonify({
+            "dish": dish_name,
+            "main_ingredient": main_ingredient,
             "predicted_year": int(predicted_year.astype(float)),
             "predicted_temperature": round(predicted_temp.astype(float), 2),
             "predicted_rainfall": round(predicted_rainfall.astype(float), 2)
@@ -142,59 +141,38 @@ def predict():
 
 @app.route('/generate-image', methods=['POST'])
 def generate_image():
-    openai.api_key = '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'
-    data = request.json
+    #  Ensure prompt is provided
+    ingredient = request.form.get('ingredient', '').strip()
+
+    if not ingredient:
+        return jsonify({'error': 'Missing "ingredient" parameter'}), 400
+
+    url = "https://api.freepik.com/v1/ai/text-to-image"
+
+    payload = {
+    "prompt": "Crazy dog in the space",
+    "negative_prompt": "b&w, earth, cartoon, ugly",
+    "guidance_scale": 2,
+    "seed": 42,
+    "num_images": 1,
+    "image": {"size": "square_1_1"},
+    "styling": {
+        "style": "anime",
+        "color": "pastel",
+        "lightning": "warm",
+        "framing": "portrait"
+    }
+    }
+    headers = {
+    "Content-Type": "application/json",
+    "x-freepik-api-key": "FPSXcb802234c5cf4c1a85a680749d117169"
+    }
+
+    response = requests.request("POST", url, json=payload, headers=headers)
+
+    print(response.text)
     
-    # Ensure prompt is provided
-    prompt = data.get('prompt')
-    if not prompt:
-        return jsonify({'error': 'Missing "prompt" parameter'}), 400
-
-    # Optional: Allow size customization
-    size = data.get('size', '1024x1024')
-
-    try:
-        # Request image generation
-        response = openai.Image.create(
-            prompt=prompt,
-            n=1,
-            size=size
-        )
-
-        # Get the image URL
-        image_url = response['data'][0]['url']
-
-        # Download the image from the URL
-        image_response = requests.get(image_url)
-        image = Image.open(BytesIO(image_response.content))
-
-        # Save the image to a buffer
-        img_buffer = BytesIO()
-        image.save(img_buffer, format='PNG')
-        img_buffer.seek(0)
-
-        # Return the image as a response
-        return send_file(img_buffer, mimetype='image/png')
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/get-fun-fact', methods=['POST'])
-def get_fun_fact_endpoint():
-    dish_name = request.form.get('dish_name', '').strip()
-
-    if not dish_name:
-        return jsonify({"error": "Dish name is required."}), 400
-
-    try:
-        main_ingredient = find_ingredient(dish_name)
-        fun_fact = get_fun_fact(main_ingredient)
-        return jsonify({
-            "main_ingredient": main_ingredient,
-            "fun_fact": fun_fact
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
