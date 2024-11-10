@@ -58,6 +58,26 @@ def find_list_ingredients(dish_name):
     main_ingredient = response['choices'][0]['message']['content'].strip()
     return main_ingredient
 
+def find_replacement_ingredient(dish, ingredient):
+    prompt = f"""
+    Determine the replacement ingredient(s) used to make the following dish if the following ingredient is extinct or not available.
+
+    Dish: {dish}
+    Ingredient: {ingredient}
+
+    Return only the replacement ingredientthat can be used without any additional text and within one or two words"""
+
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",  # Use "gpt-4" if available and you have access
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant for identifying ingredients."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    replacement_ingredient = response['choices'][0]['message']['content'].strip()
+    return replacement_ingredient
+
 @app.route('/list-ingredients', methods=['POST'])
 def list_ingredients():
     # Accept dish name via form data
@@ -74,6 +94,26 @@ def list_ingredients():
         # Return ingredients as JSON
         ingredients_list = [ingredient.strip() for ingredient in main_ingredients.split(',')]
         return jsonify({"ingredients": ingredients_list})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/replacement-ingredient', methods=['POST'])
+def replacement_ingredient():
+    dish_name = request.form.get('dish_name', '').strip()
+    ingredient = request.form.get('ingredient', '').strip()
+
+    if not dish_name:
+        return jsonify({"error": "Dish name is required."}), 400
+    if not ingredient:
+        return jsonify({"error": "Ingredient is required."}), 400
+
+    try:
+        # Assuming find_replacement_ingredient returns an ingredient
+        replacement_ingredient = find_replacement_ingredient(dish_name,ingredient)
+        print("We got the replacement ingredient >>>", replacement_ingredient)
+
+        # Return ingredients as JSON
+        return jsonify({"replacementIngredient": replacement_ingredient})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
