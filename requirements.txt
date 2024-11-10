@@ -3,3 +3,7 @@ Flask-Cors==5.0.0    # CORS handling for cross-origin requests
 openai==0.28.0         # OpenAI API
 requests==2.32.3      # HTTP requests library
 Pillow==11.0.0         # Image handling with PIL (Python Imaging Library)
+pandas==2.2.3          # Data manipulation and analysis
+numpy==2.0.2        # Numerical computations
+tensorflow==2.18.0     # Deep learning library
+scikit-learn==1.5.2    # Machine learning tools
