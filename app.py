@@ -1,7 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import openai
 from flask_cors import CORS
 from predict import predict_year_temperature_humidity_nn  
+import requests
+from io import BytesIO
+from PIL import Image
 
 app = Flask(__name__)
 CORS(app) 
@@ -93,6 +96,46 @@ def predict():
         })
     except Exception as e:
         return f"Error: {str(e)}", 500
+
+@app.route('/generate-image', methods=['POST'])
+def generate_image():
+    openai.api_key = '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'
+    data = request.json
+    
+    # Ensure prompt is provided
+    prompt = data.get('prompt')
+    if not prompt:
+        return jsonify({'error': 'Missing "prompt" parameter'}), 400
+
+    # Optional: Allow size customization
+    size = data.get('size', '1024x1024')
+
+    try:
+        # Request image generation
+        response = openai.Image.create(
+            prompt=prompt,
+            n=1,
+            size=size
+        )
+
+        # Get the image URL
+        image_url = response['data'][0]['url']
+
+        # Download the image from the URL
+        image_response = requests.get(image_url)
+        image = Image.open(BytesIO(image_response.content))
+
+        # Save the image to a buffer
+        img_buffer = BytesIO()
+        image.save(img_buffer, format='PNG')
+        img_buffer.seek(0)
+
+        # Return the image as a response
+        return send_file(img_buffer, mimetype='image/png')
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
