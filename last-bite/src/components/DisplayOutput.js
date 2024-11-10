@@ -20,12 +20,12 @@ const DisplayOutput = ({ inputValue, handleTryAgain }) => {
       ref={containerRef}
       style={{
         position: 'absolute',
-        top: '50%',
+        top: '150%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: '50%',
         padding: '20px',
-        backgroundColor: '#4CAF50',
+        backgroundColor: 'transparent',
         borderRadius: '8px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
         display: 'flex',
@@ -37,16 +37,17 @@ const DisplayOutput = ({ inputValue, handleTryAgain }) => {
         style={{
           margin: '0 0 10px 0',
           fontSize: '40px',
-          color: '#fff',
+          color: '#000',
           textAlign: 'center',
         }}
       >
-      {inputValue} will expire in ___ years !!
+      {inputValue.charAt(0).toUpperCase() + inputValue.slice(1)} will expire in ___ years !!
     </p>
     <button onClick={handleTryAgain} style={{
+        cursor: 'pointer',
         marginTop: '20px',
         padding: '10px',
-        backgroundColor: 'white',
+        backgroundColor: '#FDE5CD',
         borderRadius: '4px',
         border: 'none',
         fontSize: '20px'

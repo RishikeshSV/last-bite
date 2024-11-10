@@ -25,43 +25,34 @@ const SlidingInput = ({ handleInputChange, handleEnterPress }) => {
       ref={containerRef}
       style={{
         position: 'absolute',
-        top: '50%',
+        top: '150%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: '50%',
         padding: '20px',
-        backgroundColor: '#4CAF50',
+        backgroundColor: 'transparent',
+        // backgroundImage: 'linear-gradient(to right, #F7C4F8 , #F8C4DF, #DEC4F8)',
         borderRadius: '8px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
       }}
     >
-      <p
-        style={{
-          margin: '0 0 10px 0',
-          fontSize: '36px',
-          color: '#fff',
-          textAlign: 'center',
-        }}
-      >
-        What's your favorite dish ?
-      </p>
       <input
         type="text"
-        placeholder="Prepare to be amazed"
+        placeholder="Enter Text here"
         onChange={(e) => handleInputChange(e.target.value)}
         onKeyDown={handleKeyDown} // Detect Enter key press
         style={{
           width: '100%',
           padding: '10px',
-          fontSize: '16px',
           borderRadius: '4px',
           border: 'none',
           outline: 'none',
-          backgroundColor: '#4CAF50',
-          textAlign: 'center'
+          textAlign: 'center',
+          backgroundColor: 'transparent', // Make the background transparent
+          fontSize: '16px', // Optional: set font size
         }}
       />
     </div>

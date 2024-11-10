@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import SlidingInput from './SlidingInput';
 import DisplayOutput from './DisplayOutput';
+import Background from './Background';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
-function Home() {
+const Home = React.forwardRef((props, ref) => {
   const [inputValue, setInputValue] = useState('');
   const [showOutputPage, setShowOutputPage] = useState(false);
+  const {scrollToLanding} = props
 
   const handleInputChange = (value) => {
     setInputValue(value);
@@ -19,7 +23,8 @@ function Home() {
   }
 
   return (
-    <div>
+    <div ref={ref}>
+        <Background scrollToLanding={scrollToLanding}/>
     <div>
       {showOutputPage ? (
         <div>
@@ -32,6 +37,6 @@ function Home() {
    
     </div>
   );
-}
+});
 
 export default Home;

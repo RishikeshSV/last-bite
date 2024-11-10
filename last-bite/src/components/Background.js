@@ -1,21 +1,42 @@
 import React from 'react';
-import FoodBg from '../images/FoodIcons.jpg'; // Import the image
-import Home from './Home';
+import LastBiteForText from '../images/page2.jpg'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
-const Background = () => {
+const Background = ({scrollToLanding}) => {
   return (
+    <>
+
     <div
       style={{
-        backgroundImage: `url(${FoodBg})`,
+        backgroundImage: `url(${LastBiteForText})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         height: '100vh',
         width: '100%',
+        position: 'relative', // This ensures the arrow is positioned at the bottom
       }}
-    >
-      <Home />
+    > 
+            <div
+        onClick={scrollToLanding} // Trigger the scroll on click
+        style={{
+          position: 'absolute',
+          top: '20px', // Position the arrow at the bottom
+          left:'50%',
+          transform: 'translateX(-50%)',
+          cursor: 'pointer',
+          fontSize: '30px',
+          color: '#fff', // Change arrow color if needed
+          backgroundColor: '#7d5241',
+          borderRadius: '50%',
+          padding: '10px 15px'
+        }}
+      >
+        <FontAwesomeIcon icon={faArrowUp} />
+      </div>
     </div>
+    </>
   );
 };
 
