@@ -15,8 +15,26 @@ encoder = OneHotEncoder()
 
 # Load the dataset for consistent preprocessing (adapt as needed)
 yield_df = pd.read_csv('./Models/yield_df.csv')
+yield_df['hg/ha_yield'].fillna(yield_df['hg/ha_yield'].mean(), inplace=True)
+yield_df['avg_temp'].fillna(yield_df['avg_temp'].mean(), inplace=True)
+yield_df['average_rain_fall_mm_per_year'].fillna(yield_df['average_rain_fall_mm_per_year'].mean(), inplace=True)
+
+# Feature Engineering
+yield_df['yield_squared'] = yield_df['hg/ha_yield'] ** 2  # Polynomial feature
+yield_df['yield_log'] = np.log1p(yield_df['hg/ha_yield'])  # Log transformation
+yield_df['yield_temp_interaction'] = yield_df['hg/ha_yield'] * yield_df['avg_temp']  # Interaction term
+
+# Selecting features (X) and target variables (y)
+X = yield_df[['hg/ha_yield', 'yield_squared', 'yield_log', 'yield_temp_interaction', 'Item']]
+y_temp_rainfall = yield_df[['avg_temp', 'average_rain_fall_mm_per_year']]
+y_year = yield_df[['Year']]
+
+# Preprocessing for numerical and categorical features
 numerical_features = ['hg/ha_yield', 'yield_squared', 'yield_log', 'yield_temp_interaction']
 categorical_features = ['Item']
+
+scaler = StandardScaler()
+X[numerical_features] = scaler.fit_transform(X[numerical_features])
 
 # Fit scaler and encoder on original data
 scaler.fit(yield_df[numerical_features])
